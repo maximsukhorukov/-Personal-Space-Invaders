@@ -15,11 +15,15 @@ namespace Space_Invaders
         Rectangle Raumschiff;
         bool RaumschiffBewegenLinks = false;
         bool RaumschiffBewegenRechts = false;
+        bool RaumschiffBewegenOben = false;
+        bool RaumschiffBewegenUnten = false;
         int xRaumschiff = 35;
         int yRaumschiff = 35;
-
+        int GeschwindigkeitX ;
+        int GeschwindigkeitY = 14;
         public Form1()
         {
+            InitializeComponent();
             //gametimer
             timer = new Timer();
             timer.Start();
@@ -27,23 +31,27 @@ namespace Space_Invaders
             timer.Enabled = true;
             timer.Tick += Timer_tick;
             DoubleBuffered = true;
-
-            InitializeComponent();
+            
+            GeschwindigkeitX = 14 * this.ClientSize.Width / this.ClientSize.Height;
         }
         private void Timer_tick(object sender, EventArgs e)
         {
             if (RaumschiffBewegenLinks)
             {
-                xRaumschiff += 20;
+                xRaumschiff += GeschwindigkeitX;
             }
-
             if (RaumschiffBewegenRechts)
             {
-                xRaumschiff -= 20;
+                xRaumschiff -= GeschwindigkeitX;
             }
-
-
-
+            if (RaumschiffBewegenOben)
+            {
+                yRaumschiff += GeschwindigkeitY;
+            }
+            if (RaumschiffBewegenUnten)
+            {
+                yRaumschiff -= GeschwindigkeitY;
+            }
             Invalidate();
         }
 
@@ -59,7 +67,7 @@ namespace Space_Invaders
             Raumschiff = new Rectangle();
             Pen stiftSchwarz = new Pen(Color.Black);
             Graphics graphics = e.Graphics;
-            graphics.DrawRectangle(stiftSchwarz, this.ClientSize.Width / 2 - xRaumschiff / 2, this.ClientSize.Height - 50, 50, 50);
+            graphics.DrawRectangle(stiftSchwarz, this.ClientSize.Width / 2 - xRaumschiff / 2, this.ClientSize.Height - yRaumschiff, 50, 50);
             base.OnPaint(e);
         }
         private void Form1_Load(object sender, EventArgs e)
@@ -71,9 +79,12 @@ namespace Space_Invaders
         {
             if (e.KeyCode == Keys.A || e.KeyCode == Keys.Left)
                 RaumschiffBewegenLinks = true;
-
-            if (e.KeyCode == Keys.D | e.KeyCode == Keys.Right)
+            if (e.KeyCode == Keys.D || e.KeyCode == Keys.Right)
                 RaumschiffBewegenRechts = true;
+            if (e.KeyCode == Keys.W || e.KeyCode == Keys.Up)
+                RaumschiffBewegenOben = true;
+            if (e.KeyCode == Keys.S || e.KeyCode == Keys.Down)
+                RaumschiffBewegenUnten = true;
         }
 
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
@@ -85,9 +96,12 @@ namespace Space_Invaders
         {
             if (e.KeyCode == Keys.A || e.KeyCode == Keys.Left)
                 RaumschiffBewegenLinks = false;
-
-            if (e.KeyCode == Keys.D | e.KeyCode == Keys.Right)
+            if (e.KeyCode == Keys.D || e.KeyCode == Keys.Right)
                 RaumschiffBewegenRechts = false;
+            if (e.KeyCode == Keys.W || e.KeyCode == Keys.Up)
+                RaumschiffBewegenOben = false;
+            if (e.KeyCode == Keys.S || e.KeyCode == Keys.Down)
+                RaumschiffBewegenUnten = false;
         }
     }
 }
